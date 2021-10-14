@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using StudentApi.DTOs;
 using StudentApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace StudentApi.Controllers
 {
@@ -15,10 +16,11 @@ namespace StudentApi.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IItemsRepository<Item> repository;
-
-        public ItemsController(IItemsRepository<Item> repository)
+        private readonly ILogger<ItemsController> logger;
+        public ItemsController(IItemsRepository<Item> repository, ILogger<ItemsController> logger)
         {
             this.repository = repository;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -31,6 +33,7 @@ namespace StudentApi.Controllers
                 Price = x.Price,
                 CreatedDate = x.CreatedDate
             });
+            logger.LogInformation($"{DateTime.Now.ToString("hh:mm:ss")} : Retrieved {items.Count()} items");
             return items;
         }
         //GET /items/{id}

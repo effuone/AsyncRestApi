@@ -13,9 +13,9 @@ namespace StudentApi.Controllers
     [Route("[controller]")]
     public class StudentsController : ControllerBase
     {
-        private readonly IAsyncRepository<Student> repository;
+        private readonly IItemsRepository<Student> repository;
 
-        public StudentsController(IAsyncRepository<Student> repository)
+        public StudentsController(IItemsRepository<Student> repository)
         {
             this.repository = repository;
         }

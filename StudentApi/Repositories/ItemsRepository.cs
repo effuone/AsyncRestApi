@@ -7,7 +7,7 @@ using StudentApi.Models;
 
 namespace StudentApi.Repositories
 {
-    public class ItemsRepository : IAsyncRepository<Item>
+    public class ItemsRepository : IItemsRepository<Item>
     {
         private const string databaseName = "StudentCouncil";
         private const string collectionName = "items";

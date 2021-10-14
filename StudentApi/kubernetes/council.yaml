@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: council-deployment
+spec:
+  selector:
+    matchLabels:
+      app: council
+  template:
+    metadata:
+      labels:
+        app: council
+    spec:
+      containers:
+      - name: council
+        image: effuone/council:v2
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        env:
+        - name: MongoDbSettings__Host
+          value: mongodb-service
+        - name: MongoDbSettings__Password
+          valueFrom: 
+            secretKeyRef:
+              name: council-secrets
+              key: mongodb-password
+        livenessProbe:
+          httpGet: 
+            path: /health/live
+            port: 80
+        readinessProbe:
+          httpGet: 
+            path: /health/ready
+            port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: council-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: council
+  ports:
+  - port: 80
+    targetPort: 80

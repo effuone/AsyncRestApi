@@ -4,17 +4,18 @@ using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using StudentApi.Models;
+using StudentApi.Repositories;
 
-namespace StudentApi.Repositories
+namespace StudentApi
 {
-    public class StudentsRepository : IItemsRepository<Student>
+    public class MongoDbStudentsRepository : IItemsRepository<Student>
     {
         private const string databaseName = "StudentCouncil";
         private const string collectionName = "students";
         private readonly IMongoCollection<Student> studentsCollection;
         private readonly FilterDefinitionBuilder<Student> filterBuilder = Builders<Student>.Filter;
 
-        public StudentsRepository(IMongoClient mongoClient)
+        public MongoDbStudentsRepository(IMongoClient mongoClient)
         {
             IMongoDatabase database = mongoClient.GetDatabase(databaseName);
             studentsCollection = database.GetCollection<Student>(collectionName);
