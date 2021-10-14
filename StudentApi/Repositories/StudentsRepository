@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using StudentApi.Models;
+
+namespace StudentApi.Repositories
+{
+    public class StudentsRepository : IItemsRepository<Student>
+    {
+        private const string databaseName = "StudentCouncil";
+        private const string collectionName = "students";
+        private readonly IMongoCollection<Student> studentsCollection;
+        private readonly FilterDefinitionBuilder<Student> filterBuilder = Builders<Student>.Filter;
+
+        public StudentsRepository(IMongoClient mongoClient)
+        {
+            IMongoDatabase database = mongoClient.GetDatabase(databaseName);
+            studentsCollection = database.GetCollection<Student>(collectionName);
+        }
+
+        public async Task CreateAsync(Student item)
+        {
+            await studentsCollection.InsertOneAsync(item);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var filter = filterBuilder.Eq(item=>item.Id, id);
+            await studentsCollection.DeleteOneAsync(filter);
+        }
+
+        public async Task<IEnumerable<Student>> GetAllAsync()
+        {
+            return await studentsCollection.Find(new BsonDocument()).ToListAsync();
+        }
+
+        public async Task<Student> GetAsync(Guid id)
+        {
+            var filter = filterBuilder.Eq(item => item.Id, id);
+            return await studentsCollection.Find(filter).SingleOrDefaultAsync();
+        }
+
+        public async Task UpdateAsync(Student item)
+        {
+            var filter = filterBuilder.Eq(existingItem=>existingItem.Id, item.Id);
+            await studentsCollection.ReplaceOneAsync(filter,item);
+        }
+    }
+}

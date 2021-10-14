@@ -14,5 +14,14 @@ namespace StudentApi{
                 CreatedDate = item.CreatedDate
             };
         }
+        public static StudentDto AsDto(this Student student)
+        {
+            return new StudentDto{
+                Id = student.Id,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                GroupId = student.GroupId
+            };
+        }
     }
 }

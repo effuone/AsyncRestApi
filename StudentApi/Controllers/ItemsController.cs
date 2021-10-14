@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using StudentApi.DTOs;
 using StudentApi.Models;
 
-namespace StudentApi
+namespace StudentApi.Controllers
 {
     //GET /items
     [ApiController]
